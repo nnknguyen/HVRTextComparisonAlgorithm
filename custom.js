@@ -1,56 +1,37 @@
-const pre = require("./predefined.js");
-
-function getCharType(char) {
-	for (let x in pre.charTypes) {
-		if (pre.charTypes[x].pattern.test(char)) {
-			return pre.charTypes[x].value;
-		}
-	}
-}
-
-function isContractedForm(token) {
-	if (pre.contractedForms.test(token))
-		return true;
-	return false;
-}
+const cth = require("./charTypeHelpers");
+const cfh = require("./contractedFormHelpers");
 
 function tokenize(text) {
 	if (!text || text.trim() == "") return [];
-	let tokens = [];
-	let register = [];
+	let tokens = [];	// result
+	let register = []; // Conveying belt
 	let detectApostrophe = false;
-	for (let i = 0; i < text.length; i++) {
-		register.push(text.charAt(i));
+	for (let i = 0; i <= text.length; i++) {
+		let newChar = text.charAt(i);
+		register.push(newChar);
 		if (i == 0) continue;
 		let size = register.length;
-		if (getCharType(register[size - 2]) != getCharType(register[size - 1])) {
-			tokens.push(newToken = register.join("").slice(0, -1));
+		if (cth.compareCharTypes(register[size - 2], register[size - 1]) != 0 || cth.isOther(register[size - 1])) {
+			let newToken = register.join("");
+			if (newChar != "") newToken = newToken.slice(0, -1);
+			tokens.push(newToken);
 			register.splice(0, size - 1);
 			if (detectApostrophe) {
 				let potentialContracted = tokens.slice(-3).join("");
-				if (isContractedForm(potentialContracted)) {
+				if (cfh.isContractedForm(potentialContracted)) {
 					tokens = tokens.slice(0, -3);
 					tokens.push(potentialContracted);
 				}
 				detectApostrophe = false;
 			}
 		}
-		if (getCharType(tokens[tokens.length - 1]) == pre.charTypes.Apostrophe.value)
+		if (cth.isApostrophe(tokens[tokens.length - 1]))
 			detectApostrophe = true;
-	}
-	tokens.push(register.join(""));
-	if (detectApostrophe) {
-		let potentialContracted = tokens.slice(-3).join("");
-		if (isContractedForm(potentialContracted)) {
-			tokens = tokens.slice(0, -3);
-			tokens.push(potentialContracted);
-		}
-		detectApostrophe = false;
 	}
 	return tokens;
 }
 
-console.log(tokenize("I weren't there.").filter(c => c != ' '));
+console.log(tokenize("He didn't say 'goodbye!' to me!").filter(c => c != ' '));
 
 /*module.exports = function customCompare(text1, text2) {
     let filtered1 = tokenize(text1);
