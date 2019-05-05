@@ -28,3 +28,18 @@
 //     "haven't", "hasn't", "hadn't",
 //     "i'd", "he'd", "she'd", "it'd", "you'd", "we'd", "they'd"
 // ];
+
+// Array.prototype.containsSubArray = function(sub) {
+// 	if (!Array.isArray(sub)) throw new Error("containsSubArray() receives an Array as parameter");
+// 	let thisSize = this.length;
+// 	let subSize = sub.length;
+// 	for (let i = 0; i <= thisSize - subSize; i++) {
+// 		if (this[i] === sub[0]) {
+// 			let matchedTokens = 0;
+// 			for (let j = 1; j < subSize; j++)
+// 				if (this[i + j] === sub[j]) matchedTokens++;
+// 			if (matchedTokens === subSize - 1) return true;
+// 		}
+// 	}
+// 	return false;
+// }
