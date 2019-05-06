@@ -54,3 +54,13 @@
 
 // // Array of arrays of equivalent forms
 // const equivalentTokenSets = Array.from(contractedToExpanded).map(entry => [].concat.apply([], entry));
+
+// module.exports = function(text1, text2) {
+// 	let filtered1 = tokenize(text1);
+// 	let filtered2 = tokenize(text2);
+// 	let intersect = groupAndIntersect(filtered1, filtered2);
+// 	let set1 = new Set(filtered1);
+// 	let set2 = new Set(filtered2);
+// 	let interSet = new Set(intersect);
+// 	return (2 * interSet.size)/(set1.size + set2.size);
+// }

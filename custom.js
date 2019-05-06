@@ -102,26 +102,15 @@ function groupAndIntersect(arr1, arr2) {
 	});
 }
 
-var filtered1 = tokenize("I did not say that \"I couldn't do that\"");
-var filtered2 = tokenize("I didn't say that \"I could not do that\"");
-var intersect = groupAndIntersect(filtered1, filtered2);
-console.log(filtered1 + " - LENGTH: " + filtered1.length);
-console.log(filtered2 + " - LENGTH: " + filtered2.length);
-console.log(intersect + " - LENGTH: " + intersect.length);
-
-module.exports = function customCompare(text1, text2) {
+module.exports = function(text1, text2) {
     let filtered1 = tokenize(text1);
 	let filtered2 = tokenize(text2);
 	let intersect = groupAndIntersect(filtered1, filtered2);
     let arrayRatio = 0, setRatio = 0, displayRatio = 0;
     if (filtered2.length >= filtered1.length) {
-        arrayRatio = intersect.length / filtered1.length;
         setRatio = new Set(intersect).size / new Set(filtered1).size;
-        displayRatio = Math.max(arrayRatio, setRatio);
     } else {
-        arrayRatio = intersect.length / filtered2.length;
         setRatio = new Set(intersect).size / new Set(filtered2).size;
-        displayRatio = Math.max(arrayRatio, setRatio);
     }
-    return displayRatio;
+	return setRatio;
 }
