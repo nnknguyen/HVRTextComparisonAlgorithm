@@ -29,6 +29,8 @@ module.exports.compareCharTypes = function(char1, char2) {
 	return getCharTypeValue(char1) - getCharTypeValue(char2);
 }
 
+module.exports.isWhitespace = function(char) { return char == " "; }
+
 module.exports.isApostrophe = function(char) { return char == "'"; }
 
 module.exports.isOther = function(char) { return charTypes.Other.pattern.test(char); }

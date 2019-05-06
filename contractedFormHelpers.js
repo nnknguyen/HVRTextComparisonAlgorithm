@@ -1,3 +1,7 @@
+Array.prototype.myFlat = function() {
+    return [].concat.apply([], this);
+}
+
 // General form of a potential contracted form.
 // E.g.: didn't, shouldn't, it's, what's
 // Note: Exception cases such as possessive forms will also be included.
@@ -37,12 +41,12 @@ const contractedToExpanded = new Map([
     ["how'd'y", ["how do you"]],
     ["how'll", ["how will"]],
     ["how's", ["how has", "how is", "how does"]],
-    ["I'd", ["I had", "I would"]],
-    ["I'd've", ["I would have"]],
-    ["I'll", ["I shall", "I will"]],
-    ["I'll've", ["I shall have", "I will have"]],
-    ["I'm", ["I am"]],
-    ["I've", ["I have"]],
+    ["i'd", ["i had", "i would"]],
+    ["i'd've", ["i would have"]],
+    ["i'll", ["i shall", "i will"]],
+    ["i'll've", ["i shall have", "i will have"]],
+    ["i'm", ["i am"]],
+    ["i've", ["i have"]],
     ["isn't", ["is not"]],
     ["it'd", ["it had", "it would"]],
     ["it'd've", ["it would have"]],
@@ -155,3 +159,5 @@ module.exports.getEquivalentForm = function(token) {
         return expandedToContracted.get(token);
     else return null;
 }
+
+module.exports.all = Array.from(contractedToExpanded).myFlat().myFlat();
