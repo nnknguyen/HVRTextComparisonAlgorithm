@@ -43,3 +43,14 @@
 // 	}
 // 	return false;
 // }
+
+// // Array of all possible contracted forms
+// // a.k.a. all keys of the dictionary
+// module.exports.contracted = Array.from(contractedToExpanded.keys());
+
+// // Array of all possible expanded forms of contracted forms
+// // a.k.a. all values of the dictionary
+// module.exports.expanded = [].concat.apply([], Array.from(contractedToExpanded.values()));
+
+// // Array of arrays of equivalent forms
+// const equivalentTokenSets = Array.from(contractedToExpanded).map(entry => [].concat.apply([], entry));

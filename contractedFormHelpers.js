@@ -134,15 +134,24 @@ const contractedToExpanded = new Map([
 
 // Get expanded forms of a contracted form from the dictionary
 module.exports.getExpandedForm = function(token) {
-    if (contractedToExpanded.has(token))
-        return contractedToExpanded.get(token);
-    return null;
+    return contractedToExpanded.has(token) ? contractedToExpanded.get(token) : null;
 }
 
-// Array of all possible contracted forms
-// a.k.a. all keys of the dictionary
-module.exports.contracted = Array.from(contractedToExpanded.keys());
+const expandedToContracted = new Map();
+contractedToExpanded.forEach((value, key) => {
+    value.forEach(val => {
+        if (expandedToContracted.has(val))
+            expandedToContracted.get(val).push(key);
+        else
+            expandedToContracted.set(val, [key]);
+    });
+});
 
-// Array of all possible expanded forms of contracted forms
-// a.k.a. all values of the dictionary
-module.exports.expanded = [].concat.apply([], Array.from(contractedToExpanded.values()));
+// Get all equivalent forms from a contracted or expanded form except itself
+module.exports.getEquivalentForm = function(token) {
+    if (contractedToExpanded.has(token))
+        return contractedToExpanded.get(token);
+    else if (expandedToContracted.has(token))
+        return expandedToContracted.get(token);
+    else return null;
+}

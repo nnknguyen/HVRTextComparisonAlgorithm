@@ -5,6 +5,7 @@ Array.prototype.replaceSubArray = function(sub, newElem) {
 	if (!Array.isArray(sub)) throw new Error("replaceSubArray() receives an Array as the 1st parameter");
 	let thisSize = this.length;
 	let subSize = sub.length;
+	let occurence = 0;
 	for (let i = 0; i <= thisSize - subSize; i++) {
 		if (this[i] === sub[0]) {
 			let matchedTokens = 0;
@@ -13,9 +14,11 @@ Array.prototype.replaceSubArray = function(sub, newElem) {
 			if (matchedTokens === subSize - 1) {
 				this.splice(i, subSize, newElem);
 				thisSize -= subSize + 1;
+				occurence++;
 			}
 		}
 	}
+	return occurence;
 }
 
 function simpleTokenize(text) {
@@ -70,9 +73,7 @@ function tokenize(text) {
 	return tokens;
 }
 
-console.log(tokenize("I wouldn't said \"I could not do that.\""));
-
-function intersectAndGroup(arr1, arr2) {
+function groupAndIntersect(arr1, arr2) {
 	for (let i = 0; i < arr1.length; i++) {
 		let expandedForms = cfh.getExpandedForm(arr1[i]);
 		if (expandedForms) {
@@ -89,13 +90,29 @@ function intersectAndGroup(arr1, arr2) {
 			}
 		}
 	}
-	return intersect;
+	return arr1.filter(token => {
+		if (arr2.includes(token)) return true;
+		let equivalentForms = cfh.getEquivalentForm(token);
+		if (equivalentForms) {
+			for (let i = 0; i < equivalentForms.length; i++) {
+				if (arr2.includes(equivalentForms[i]))  return true;
+			}
+		}
+		return false;
+	});
 }
+
+var filtered1 = tokenize("I did not say that \"I couldn't do that\"");
+var filtered2 = tokenize("I didn't say that \"I could not do that\"");
+var intersect = groupAndIntersect(filtered1, filtered2);
+console.log(filtered1 + " - LENGTH: " + filtered1.length);
+console.log(filtered2 + " - LENGTH: " + filtered2.length);
+console.log(intersect + " - LENGTH: " + intersect.length);
 
 module.exports = function customCompare(text1, text2) {
     let filtered1 = tokenize(text1);
 	let filtered2 = tokenize(text2);
-	let intersect = intersectAndGroup(filtered1, filtered2);
+	let intersect = groupAndIntersect(filtered1, filtered2);
     let arrayRatio = 0, setRatio = 0, displayRatio = 0;
     if (filtered2.length >= filtered1.length) {
         arrayRatio = intersect.length / filtered1.length;
