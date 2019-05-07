@@ -1,3 +1,5 @@
+// Helper function that flats an array on 1 level
+// E.g.: [a, [b, c]] -> [a, b, c]
 Array.prototype.myFlat = function() {
     return [].concat.apply([], this);
 }
@@ -141,6 +143,9 @@ module.exports.getExpandedForm = function(token) {
     return contractedToExpanded.has(token) ? contractedToExpanded.get(token) : null;
 }
 
+// Dictionary of all contracted forms corresponding to its expanded form
+// a.k.a opposite to the Dictionary above
+// Note: NO exception cases will be included here.
 const expandedToContracted = new Map();
 contractedToExpanded.forEach((value, key) => {
     value.forEach(val => {
@@ -160,4 +165,5 @@ module.exports.getEquivalentForm = function(token) {
     else return null;
 }
 
+// Array of all contracted and expanded forms to be considered as common words
 module.exports.all = Array.from(contractedToExpanded).myFlat().myFlat();

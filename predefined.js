@@ -1,5 +1,7 @@
 const cfh = require("./contractedFormHelpers");
 
+// Array of common words
+// Note: This array includes all contracted, expanded forms
 const commonWords = [
 	"a", "about", "all", "an", "and", "are", "as", "at",
 	"be", "been", "but", "by",
@@ -22,6 +24,7 @@ const commonWords = [
 	"you", "your"
 ].concat(cfh.all);
 
+// This function receives a token and returns true if the token exists in the array of common words above
 module.exports.isCommonWord = function(token) {
     return commonWords.includes(token);
 }
