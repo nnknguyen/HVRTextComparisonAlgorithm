@@ -115,7 +115,7 @@ function calculateIntersectScore(arr1, arr2) {
 			if (equivalentForms) {
 				for (let i = 0; i < equivalentForms.length; i++) {
 					if (larger.includes(equivalentForms[i]))
-						result += 0.15;
+						result += 0.1;
 				}
 			}
 		}
