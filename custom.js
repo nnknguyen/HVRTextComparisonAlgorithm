@@ -2,7 +2,7 @@ const cth = require("./charTypeHelpers");
 const cfh = require("./contractedFormHelpers");
 const pre = require("./predefined");
 
-// A helper function partially replaces an array with a new element
+// A helper function replaces part of an array with a new element
 Array.prototype.replaceSubArray = function(sub, newElem) {
 	if (!Array.isArray(sub)) throw new Error("replaceSubArray() receives an Array as the 1st parameter");
 	let thisSize = this.length;
@@ -95,6 +95,10 @@ function tokenize(text) {
 	return tokens;
 }
 
+// This function recevies 2 tokenized sentences and groups words forming an expanded form
+// if the corresponding contracted form exists in the other sentence.
+// For e.g., the tokens "are" and "not" are grouped to "are not" in 1 sentence only
+// if the other sentence contains "aren't" or "ain't".
 function grouping(arr1, arr2) {
 	for (let i = 0; i < arr1.length; i++) {
 		let expandedForms = cfh.getExpandedForm(arr1[i]);
@@ -114,13 +118,20 @@ function grouping(arr1, arr2) {
 	}
 }
 
+// This functions receives 2 tokenized sentences
+// and returns the calcalated score of the intersection of the 2 sentences.
 function calculateIntersectScore(arr1, arr2) {
 	let result = 0;
+
+	// Determine the shorter sentence based on number of tokens
 	let smaller = arr2, larger = arr1;
 	if (arr1.length < arr2.length) {
 		smaller = arr1;
 		larger = arr2;
 	}
+
+	// Go through every tokens in the shorter sentence, assest each token based on a scoring scheme
+	// and assign score
 	smaller.forEach(token => {
 		if (larger.includes(token)) {
 			if (cth.isOther(token) || cth.isApostrophe(token))
@@ -131,6 +142,8 @@ function calculateIntersectScore(arr1, arr2) {
 				result += 0;
 			else result += 1;
 		} else {
+			// Token that does not exist in the other sentence but has equiavalent (contracted or expanded) form
+			// exists in the other sentence.
 			let equivalentForms = cfh.getEquivalentForm(token);
 			if (equivalentForms) {
 				for (let i = 0; i < equivalentForms.length; i++) {
@@ -143,6 +156,7 @@ function calculateIntersectScore(arr1, arr2) {
 	return result;
 }
 
+// This function recceives 1 tokenized sentence and returns the score of the sentence alone.
 function calculateSentenceScore(arr) {
 	let result = 0;
 	grouping(arr, arr);
@@ -158,29 +172,31 @@ function calculateSentenceScore(arr) {
 	return result;
 }
 
+// This function receives 2 sentences and returns its similarity ratio and the score of the original sentence
 function compareSentence(text1, text2) {
     let filtered1 = tokenize(text1);
 	let filtered2 = tokenize(text2);
 	grouping(filtered1, filtered2);
 	let intersectScore = calculateIntersectScore(filtered1, filtered2);
-    let ratio = 0, score = 0;
+    let ratio = 0;
     if (filtered2.length >= filtered1.length) {
 		ratio = intersectScore / calculateSentenceScore(filtered1);
     } else {
 		ratio = intersectScore / calculateSentenceScore(filtered2);
 	}
-	score = calculateIntersectScore(filtered1, filtered1);
-	return {ratio, score};
+	let originalTextScore = calculateSentenceScore(filtered1);
+	return {ratio, score: originalTextScore};
 }
 
 const THRESHOLD = 0.6;
 
+// This function receives a parahraph and returns an array of all sentencces.
 function breakDownToSentence(text) {
     return text.match( /\(?[^\.\?\!]+[\.!\?]\)?/g ).map(t => t.trim());
 }
 
-// Use text1 as the original text
-// text2 as the new text
+// This function receives 2 paragraphs and returns it similarity ratio.
+// Use p1 as the original text, p2 as the targeted text
 module.exports = function(p1, p2) {
     let original = breakDownToSentence(p1.toLowerCase());
     let target = breakDownToSentence(p2.toLowerCase());
@@ -190,8 +206,8 @@ module.exports = function(p1, p2) {
     let totalSentenceWeightedMatchRatio = 0;
     // for each sentence, compare with all sentences in the other paragraph
     for(var i = 0; i < original.length; ++i) {
-        let t1 = original[i];
 		// sentence score
+		let t1 = original[i];
         for(var j = 0; j < target.length; ++j) {
 			let t2 = target[j];
 			let r = compareSentence(t1, t2);
@@ -201,6 +217,7 @@ module.exports = function(p1, p2) {
 			}
 		}
 		
+		// In case there is no corresponding sentence detected...
 		if(sentenceMaxMatchRatio == 0) {
 			sentenceScore = calculateSentenceScore(tokenize(t1));
 		}
@@ -210,7 +227,7 @@ module.exports = function(p1, p2) {
 
 		sentenceScore = 0;
 		sentenceMaxMatchRatio = 0;
-    }
-    // think about the return format, return a ratio for now
+	}
+	
     return totalSentenceWeightedMatchRatio / totalSentenceWeightedScore;
 }

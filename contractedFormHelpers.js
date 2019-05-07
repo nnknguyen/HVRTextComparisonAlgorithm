@@ -1,8 +1,6 @@
 // Helper function that flats an array on 1 level
 // E.g.: [a, [b, c]] -> [a, b, c]
-Array.prototype.myFlat = function() {
-    return [].concat.apply([], this);
-}
+Array.prototype.myFlat = () => [].concat.apply([], this);
 
 // General form of a potential contracted form.
 // E.g.: didn't, shouldn't, it's, what's
@@ -10,11 +8,8 @@ Array.prototype.myFlat = function() {
 // E.g.: "company's devices"
 const contractedForms = /[A-Za-z]+'[A-Za-z]+/;
 
-module.exports.isContractedForm = function(token) {
-	if (contractedForms.test(token))
-		return true;
-	return false;
-}
+// This function receives a token and returns true if the token has the form of the Regex above, false otherwise
+module.exports.isContractedForm = token => contractedForms.test(token);
 
 // Dictionary of all expanded forms corresponding to its contracted form
 // Note: NO exception cases will be included here.
@@ -139,9 +134,7 @@ const contractedToExpanded = new Map([
 ]);
 
 // Get expanded forms of a contracted form from the dictionary
-module.exports.getExpandedForm = function(token) {
-    return contractedToExpanded.has(token) ? contractedToExpanded.get(token) : null;
-}
+module.exports.getExpandedForm = token => contractedToExpanded.has(token) ? contractedToExpanded.get(token) : null;
 
 // Dictionary of all contracted forms corresponding to its expanded form
 // a.k.a opposite to the Dictionary above
