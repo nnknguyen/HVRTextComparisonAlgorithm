@@ -1,6 +1,8 @@
 // Helper function that flats an array on 1 level
 // E.g.: [a, [b, c]] -> [a, b, c]
-Array.prototype.myFlat = () => [].concat.apply([], this);
+Array.prototype.myFlat = function() {
+    return [].concat.apply([], this);
+}
 
 // General form of a potential contracted form.
 // E.g.: didn't, shouldn't, it's, what's

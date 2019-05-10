@@ -191,15 +191,16 @@ function compareSentence(text1, text2) {
 const THRESHOLD = 0.6;
 
 // This function receives a parahraph and returns an array of all sentencces.
-function breakDownToSentence(text) {
-    return text.match( /\(?[^\.\?\!]+[\.!\?]\)?/g ).map(t => t.trim());
+function breakDownToSentences(paragraph) {
+	return paragraph.replace(/([.?!])\s*(?=[a-z]|[A-Z])/g, "$1\n").split("\n")
+	//return paragraph.match( /\(?[^\.\?\!]+[\.!\?]\)?/g ).map(t => t.trim());
 }
 
 // This function receives 2 paragraphs and returns it similarity ratio.
 // Use p1 as the original text, p2 as the targeted text
 module.exports = function(p1, p2) {
-    let original = breakDownToSentence(p1.toLowerCase());
-    let target = breakDownToSentence(p2.toLowerCase());
+    let original = breakDownToSentences(p1.toLowerCase());
+	let target = breakDownToSentences(p2.toLowerCase());
 	let sentenceScore = 0;
     let sentenceMaxMatchRatio = 0;
     let totalSentenceWeightedScore = 0;
