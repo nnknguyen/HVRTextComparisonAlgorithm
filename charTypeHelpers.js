@@ -12,8 +12,12 @@ const charTypes = {
 		value: 3,
 		pattern: /'/
 	},
-	Other: {
+	Dot: {
 		value: 4,
+		pattern: /\./
+	},
+	Other: {
+		value: 5,
 		pattern: /[^\w-\s']/
 	},
 };
@@ -37,6 +41,9 @@ module.exports.isWhitespace = function(char) { return char == " "; }
 
 // This function receives 1 character and returns true if the character is an Apostrophe, false otherwise
 module.exports.isApostrophe = function(char) { return char == "'"; }
+
+// This function receives 1 character and returns true if the character is a dot, false otherwise
+module.exports.isDot = function(char) { return char == "."; }
 
 // This function receives 1 character and returns true if the character is not an alphanumeric, a whitespace or an apostrophe, false otherwise
 module.exports.isOther = function(char) { return charTypes.Other.pattern.test(char); }

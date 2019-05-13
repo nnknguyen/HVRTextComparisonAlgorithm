@@ -57,6 +57,7 @@ function tokenize(text) {
 	let tokens = [];				// result after tokenization
 	let register = [];				// conveying belt - a pipeline of characters 
 	let detectApostrophe = false;	// Flag identifies if an Apostrophe token is detected
+	let dotCounter = 0;				// Counter of the dots without space tokens in between
 
 	// Loop through every character in the sentence
 	let textLen = text.length;
@@ -74,26 +75,41 @@ function tokenize(text) {
 			if (newChar != "") newToken = newToken.slice(0, -1);
 			tokens.push(newToken);
 			register.splice(0, size - 1);
+		}
 
-			// Handle Apostrophe case
-			if (detectApostrophe) {
-				let potentialContracted = tokens.slice(-3).join("");
-				// Join 3 last 3 tokens if its combination creates a contracted form
-				if (cfh.isContractedForm(potentialContracted)) {
-					tokens = tokens.slice(0, -3);
-					tokens.push(potentialContracted);
-				}
-				detectApostrophe = false;
+		let tokenSize = tokens.length;
+
+		
+		// Handle Apostrophe case
+		if (detectApostrophe) {
+			let potentialContracted = tokens.slice(-3).join("");
+			// Join 3 last 3 tokens if its combination creates a contracted form
+			if (cfh.isContractedForm(potentialContracted)) {
+				tokens = tokens.slice(0, -3);
+				tokens.push(potentialContracted);
 			}
+			detectApostrophe = false;
+		}
+
+		// Handle Abbreviation case
+		if (cth.isWhitespace(tokens[tokenSize - 1]) && dotCounter >= 2) {
+
 		}
 
 		// Set flag to true if an Apostrophe token is detected
-		if (cth.isApostrophe(tokens[tokens.length - 1]))
+		if (cth.isApostrophe(tokens[tokenSize - 1]))
 			detectApostrophe = true;
+
+		// Increment dot-counter if a dot is detected
+		if (cth.isDot(tokens[tokenSize - 1]))
+			dotCounter++;
+
 	}
 	
 	return tokens;
 }
+
+console.log(tokenize("Je t'aime"));
 
 // This function recevies 2 tokenized sentences and groups words forming an expanded form
 // if the corresponding contracted form exists in the other sentence.
