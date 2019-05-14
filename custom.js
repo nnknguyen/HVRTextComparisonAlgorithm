@@ -72,29 +72,39 @@ function tokenize(text) {
 		if (cth.compareCharTypes(register[size - 2], register[size - 1]) != 0 || cth.isOther(register[size - 1])) {
 			// Extract the token except the last character which belongs to the next token
 			let newToken = register.join("");
-			if (newChar != "") newToken = newToken.slice(0, -1);
+			if (!cth.isEmptyString(newChar)) newToken = newToken.slice(0, -1);
 			tokens.push(newToken);
 			register.splice(0, size - 1);
+
+			// Handle Apostrophe case
+			if (detectApostrophe) {
+				let potentialContracted = tokens.slice(-3).join("");
+				// Join 3 last 3 tokens if its combination creates a contracted form
+				if (cfh.isContractedForm(potentialContracted)) {
+					tokens = tokens.slice(0, -3);
+					tokens.push(potentialContracted);
+				}
+
+				//Reset flag
+				detectApostrophe = false;
+			}
+
+			size = register.length;
+			// Handle Abbreviation case
+			if (cth.isWhitespace(register[size - 1]) || cth.isEmptyString(register[size - 1])) {
+				if (dotCounter >= 2) {
+					let lastWhitespacePos = tokens.lastIndexOf(" ");
+					let abbreviation = tokens.slice(lastWhitespacePos + 1).join("");
+					tokens = tokens.slice(0, -abbreviation.length)
+					tokens.push(abbreviation);
+				}
+
+				// Reset dot-counter after 1 abbreviation
+				dotCounter = 0;
+			}
 		}
 
 		let tokenSize = tokens.length;
-
-		
-		// Handle Apostrophe case
-		if (detectApostrophe) {
-			let potentialContracted = tokens.slice(-3).join("");
-			// Join 3 last 3 tokens if its combination creates a contracted form
-			if (cfh.isContractedForm(potentialContracted)) {
-				tokens = tokens.slice(0, -3);
-				tokens.push(potentialContracted);
-			}
-			detectApostrophe = false;
-		}
-
-		// Handle Abbreviation case
-		if (cth.isWhitespace(tokens[tokenSize - 1]) && dotCounter >= 2) {
-
-		}
 
 		// Set flag to true if an Apostrophe token is detected
 		if (cth.isApostrophe(tokens[tokenSize - 1]))
@@ -108,8 +118,6 @@ function tokenize(text) {
 	
 	return tokens;
 }
-
-console.log(tokenize("Je t'aime"));
 
 // This function recevies 2 tokenized sentences and groups words forming an expanded form
 // if the corresponding contracted form exists in the other sentence.
@@ -166,6 +174,11 @@ function calculateIntersectScore(arr1, arr2) {
 					if (larger.includes(equivalentForms[i]))
 						result += 0.1;
 				}
+			} else {
+				// Remove all dots in the token
+				var dotStriped = token.split("").filter(char => !cth.isDot(char)).join("");
+				if (larger.map(t => t.split("").filter(char => !cth.isDot(char)).join("")).includes(dotStriped))
+					result += 0.8;
 			}
 		}
 	});
@@ -177,13 +190,13 @@ function calculateSentenceScore(arr) {
 	let result = 0;
 	grouping(arr, arr);
 	arr.forEach(token => {
-		if (cth.isOther(token) || cth.isApostrophe(token))
+		if (cth.isOther(token) || cth.isApostrophe(token)) {
 			result += 0.4;
-		else if (pre.isCommonWord(token))
+		} else if (pre.isCommonWord(token)) {
 			result += 0.2;
-		else if (cth.isWhitespace(token))
+		} else if (cth.isWhitespace(token)) {
 			result += 0;
-		else result += 1;
+		} else result += 1;
 	});
 	return result;
 }
@@ -194,7 +207,7 @@ function compareSentence(text1, text2) {
 	let filtered2 = tokenize(text2);
 	grouping(filtered1, filtered2);
 	let intersectScore = calculateIntersectScore(filtered1, filtered2);
-    let ratio = 0;
+	let ratio = 0;
     if (filtered2.length >= filtered1.length) {
 		ratio = intersectScore / calculateSentenceScore(filtered1);
     } else {
