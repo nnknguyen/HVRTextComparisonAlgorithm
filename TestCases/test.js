@@ -1,7 +1,7 @@
 const compareParagraph = require("../custom.js");
 
 var cases = [
-    {
+    /*{
         text1: "I would not say, I couldn't have done the repair without you.",
         text2: "I wouldn't say I could not have done the repair without you.",
     },
@@ -22,6 +22,10 @@ var cases = [
         text2: "Ginsherman said after the mock hearing that there had been situations where people, allegedly, bought narratives. He also quoted \"If you've memorized something, it's very difficult to pick something out of context – you have to go through everything to get to that point where they've memorized an answer. If it is something you've lived, you can answer it spontaneously.\""
     },
     {
+        text1: "CBSA is committed to improving its relationship with Indigenous Peoples, which is why just over one year ago it launched the Indigenous Affairs Secretariat (IAS). The IAS collaborates with colleagues across the Agency to build a culture where Indigenous affairs are at the forefront of CBSA considerations, both as a workplace and as a border enforcement agency. The Secretariat leads work to guide the relationship between the Agency and Indigenous communities and travellers so that respect for Indigenous Peoples as well as for the mandate of the CBSA are at equal play.",
+        text2: "C.B.S.A. is committed to improving its relationship with Indigenous Peoples, which is why just over one year ago it launched the Indigenous Affairs Secretariat (IAS). The I.A.S collaborates with colleagues across the Agency to build a culture where Indigenous affairs are at the forefront of C.B.S.A. considerations, both as a workplace and as a border enforcement agency. The Secretariat leads work to guide the relationship between the Agency and Indigenous communities and travellers so that respect for Indigenous Peoples as well as for the mandate of the C.B.S.A. are at equal play."
+    },
+    {
         text1: "Apple Inc., a company that became a trillion-dollar behemoth on the popularity of its sleek and high-priced devices, is banking its future on subscription services.",
         text2: "Apple Inc., a company that became a trillion-dollar behemoth on the popularity of its sleek and high-priced devices, is banking its future on subscription services."
     },
@@ -32,19 +36,20 @@ var cases = [
     {
         text1: "While much of the new subscription products will be available exclusively on Apple devices, the company said it would make its new original television streaming service, Apple TV+, available through smart TVs designed by rivals such as Samsung and on digital media players from Roku and Amazon's Fire TV, starting in the fall. The Canadian version of Apple TV will include the ability to purchase subscriptions to Bell Media's streaming service, Crave, which will continue to hold the rights to paid subscription channels such as HBO and Starz. Radio-Canada and CBC's French language video-on-demand service ICI TOU will also be included.",
         text2: "Global iPhone sales have started to show signs of slowing. Apple slashed its revenue forecast for the first time in more than 15 years in January, citing slowing iPhone sales in China, where the company increasingly competes with lower-cost domestic device-makers such as Huawei."
-    },
+    },*/
 ];
 
 
 cases.forEach(c => c.ratio = compareParagraph(c.text1, c.text2));
+
 for (let e of cases) {
     console.log("==================================================");
     console.log("TEXT 1:");
     console.log(e.text1);
-    console.log("_______")
+    console.log("_____________")
     console.log("TEXT 2:");
     console.log(e.text2);
-    console.log("_______")
+    console.log("_____________")
     console.log("<-- RATIO -->");
     console.log(e.ratio);
 }

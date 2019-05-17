@@ -2,7 +2,7 @@
 const charTypes = {
 	AlphaNumeric: {
 		value: 1,
-		pattern: /[\w-]/
+		pattern: /^[\w-]$/
 	},
 	Whitespace: {
 		value: 2,
