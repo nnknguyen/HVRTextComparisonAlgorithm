@@ -148,10 +148,12 @@ function calculateIntersectScore(arr1, arr2) {
 	let result = 0;
 
 	// Determine the shorter sentence based on number of tokens
-	let smaller = arr2, larger = arr1;
+	let smaller = Array.from(arr2);
+	let larger = Array.from(arr1);
 	if (arr1.length < arr2.length) {
-		smaller = arr1;
-		larger = arr2;
+		let temp = smaller;
+		smaller = larger;
+		larger = temp;
 	}
 
 	// Go through every tokens in the shorter sentence, assest each token based on a scoring scheme
@@ -165,20 +167,37 @@ function calculateIntersectScore(arr1, arr2) {
 			else if (cth.isWhitespace(token))
 				result += 0;
 			else result += 1;
+
+			// Remove from "larger" token has already been accounted for
+			let x = larger.indexOf(token);
+			larger[x] = null;
 		} else {
 			// Token that does not exist in the other sentence but has equiavalent (contracted or expanded) form
 			// exists in the other sentence.
 			let equivalentForms = cfh.getEquivalentForm(token);
 			if (equivalentForms) {
 				for (let i = 0; i < equivalentForms.length; i++) {
-					if (larger.includes(equivalentForms[i]))
+					if (larger.includes(equivalentForms[i])) {
 						result += 0.1;
+						
+						// Remove from "larger" token has already been accounted for
+						let x = larger.indexOf(equivalentForms[i]);
+						larger[x] = null;
+
+						break;
+					}
 				}
 			} else {
 				// Remove all dots in the token
-				var dotStriped = token.split("").filter(char => !cth.isDot(char)).join("");
-				if (larger.map(t => t.split("").filter(char => !cth.isDot(char)).join("")).includes(dotStriped))
+				let dotStripedToken = token.split("").filter(char => !cth.isDot(char)).join("");
+				let dotStripedLarger = larger.filter(t => t).map(t => t.split("").filter(char => !cth.isDot(char)).join(""));
+				if (dotStripedLarger.includes(dotStripedToken)) {
 					result += 0.8;
+
+					// Remove from "larger" token has already been accounted for
+					let x = dotStripedLarger.indexOf(dotStripedToken);
+					larger[x] = null;
+				}
 			}
 		}
 	});
