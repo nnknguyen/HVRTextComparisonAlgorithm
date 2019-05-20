@@ -3,7 +3,10 @@
         <title>Highlight testing</title>
     </head>
     <body>
-        <pre id="display"></pre>
+        Diff by words: <pre id="word"></pre>
+        Diff by char: <pre id="char"></pre>
+        Diff by sentence: <pre id="sentence"></pre>
+
         <script src="../diff.js"></script>
         <script>
         var one = 'I am hungry and I am going to buy some sandwich from Subway.',
@@ -13,11 +16,15 @@
 
         let d = new Diff();
 
-        var diff = diffWords(one, other),
-            display = document.getElementById('display'),
+        var diffSent = diffSentences(one, other),
+            diffChar = diffChars(one, other),
+            diffWord = diffWords(one, other),
+            displayWord = document.getElementById('word'),
+            displayChar = document.getElementById('char'),
+            displaySent = document.getElementById('sentence'),
             fragment = document.createDocumentFragment();
 
-        diff.forEach(function(part){
+        diffWord.forEach(function(part){
           // green for additions, red for deletions
           // grey for common parts
           color = part.added ? 'green' :
@@ -30,8 +37,44 @@
             .createTextNode(part.value));
           fragment.appendChild(span);
         });
+        displayWord.appendChild(fragment);
+        color = '';
+        span = null;
+        fragment = document.createDocumentFragment();
 
-        display.appendChild(fragment);
+        diffChar.forEach(function(part){
+          // green for additions, red for deletions
+          // grey for common parts
+          color = part.added ? 'green' :
+            part.removed ? 'red' : 'grey';
+          span = document.createElement('span');
+          span.style.color = color;
+          if(color == 'red')
+            span.style.textDecoration = 'line-through';
+          span.appendChild(document
+            .createTextNode(part.value));
+          fragment.appendChild(span);
+        });
+        displayChar.appendChild(fragment);
+        color = '';
+        span = null;
+        fragment = document.createDocumentFragment();
+
+        diffSent.forEach(function(part){
+          // green for additions, red for deletions
+          // grey for common parts
+          color = part.added ? 'green' :
+            part.removed ? 'red' : 'grey';
+          span = document.createElement('span');
+          span.style.color = color;
+          if(color == 'red')
+            span.style.textDecoration = 'line-through';
+          span.appendChild(document
+            .createTextNode(part.value));
+          fragment.appendChild(span);
+        });
+        displaySent.appendChild(fragment);
+
         </script>
     </body>
 </html>
