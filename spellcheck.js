@@ -4,7 +4,7 @@ let https = require ('https');
 let host = 'api.cognitive.microsoft.com';
 let path = '/bing/v7.0/spellcheck';
 let key1 = 'a66ad63fee2e421691f0d1e04972f6a8';
-let key2 = 'fe49b63184d745be85fefe53a95c1668';
+//let key2 = 'fe49b63184d745be85fefe53a95c1668';
 
 let key = key1;
 
@@ -48,7 +48,7 @@ module.exports = function getCorrectSpelling(text) {
             });
             response.on('end', function () {
                 let body_ = JSON.parse(body);
-                resolve(replaceText(text, body_));
+                resolve({correct: replaceText(text, body_), json: JSON.stringify(body_, null, 2)});
             });
             response.on('error', function (e) {
                 reject('Error: ' + e.message);
