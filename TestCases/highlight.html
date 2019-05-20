@@ -3,14 +3,16 @@
         <title>Highlight testing</title>
     </head>
     <body>
+        <p>Original: I would not say, I couldn't have done the repair without you.</p>
+        <p>Target: I wouldn't say I could not have done the repair without you.</p>
         Diff by words: <pre id="word"></pre>
         Diff by char: <pre id="char"></pre>
         Diff by sentence: <pre id="sentence"></pre>
 
         <script src="../diff.js"></script>
         <script>
-        var one = 'I am hungry and I am going to buy some sandwich from Subway.',
-            other = 'I am not hungry because already bought sandwich from Subway.',
+        var one = "I would not say, I couldn't have done the repair without you.",
+            other = "I wouldn't say I could not have done the repair without you.",
             color = '',
             span = null;
 
