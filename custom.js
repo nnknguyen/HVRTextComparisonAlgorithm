@@ -28,6 +28,7 @@ Array.prototype.replaceSubArray = function(sub, newElem) {
 // This method does not handle exceptional cases
 function simpleTokenize(text) {
 	if (!text || text.trim() == "") return [];
+	
 	let tokens = [];		// result
 	let register = []; 		// conveying belt
 	let textLen = text.length;
@@ -55,6 +56,7 @@ function simpleTokenize(text) {
 // This method handles exceptional cases
 function tokenize(text) {
 	if (!text || text.trim() == "") return [];
+
 	let tokens = [];				// result after tokenization
 	let register = [];				// conveying belt - a pipeline of characters 
 	let detectApostrophe = false;	// Flag identifies if an Apostrophe token is detected
@@ -239,19 +241,21 @@ function compareSentence(text1, text2) {
 	return {ratio, score: originalTextScore};
 }
 
-const THRESHOLD = 0.6;
-
 // This function receives a parahraph and returns an array of all sentencces.
 function breakDownToSentences(paragraph) {
     return paragraph.replace(/([.?!])\s+(?=[^a-z])/g, "$1\n").split("\n")
-	//return paragraph.match( /\(?[^\.\?\!]+[\.!\?]\)?/g ).map(t => t.trim());
 }
 
 // This function receives 2 paragraphs and returns it similarity ratio.
 // Use p1 as the original text, p2 as the targeted text
 module.exports = function(p1, p2) {
-    let original = breakDownToSentences(p1).map(sentence => sentence.toLowerCase());
-	let target = breakDownToSentences(p2).map(sentence => sentence.toLowerCase());
+    let original = breakDownToSentences(p1);
+	let target = breakDownToSentences(p2);
+	if (conf.ignoreCase) {
+		original = original.map(sentence => sentence.toLowerCase());
+		target = target.map(sentence => sentence.toLowerCase());
+	}
+
 	let sentenceScore = 0;
     let sentenceMaxMatchRatio = 0;
     let totalSentenceWeightedScore = 0;
@@ -263,7 +267,7 @@ module.exports = function(p1, p2) {
         for(var j = 0; j < target.length; ++j) {
 			let t2 = target[j];
 			let r = compareSentence(t1, t2);
-			if(r.ratio > THRESHOLD && r.ratio > sentenceMaxMatchRatio) {
+			if(r.ratio > conf.sentenceThreshold && r.ratio > sentenceMaxMatchRatio) {
 				sentenceMaxMatchRatio = r.ratio;
 				sentenceScore = r.score;
 			}

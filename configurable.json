@@ -1,4 +1,5 @@
 {
+    "ignoreCase": true,
     "tokenScore": {
         "intersection": {
             "whitespace": 0,
@@ -14,5 +15,6 @@
             "commonWord": 0.2,
             "regularWord": 1
         }
-    }
+    },
+    "sentenceThreshold": 0.6
 }
