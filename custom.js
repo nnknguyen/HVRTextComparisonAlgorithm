@@ -1,6 +1,7 @@
 const cth = require("./charTypeHelpers");
 const cfh = require("./contractedFormHelpers");
 const pre = require("./predefined");
+const conf = require("./configurable");
 
 // A helper function replaces part of an array with a new element
 Array.prototype.replaceSubArray = function(sub, newElem) {
@@ -159,14 +160,15 @@ function calculateIntersectScore(arr1, arr2) {
 	// Go through every tokens in the shorter sentence, assest each token based on a scoring scheme
 	// and assign score
 	smaller.forEach(token => {
+		let scoreScheme = conf.tokenScore.intersection;
 		if (larger.includes(token)) {
-			if (cth.isOther(token) || cth.isApostrophe(token))
-				result += 0.4;
-			else if (pre.isCommonWord(token))
-				result += 0.2;
-			else if (cth.isWhitespace(token))
-				result += 0;
-			else result += 1;
+			if (cth.isOther(token) || cth.isApostrophe(token)) {
+				result += scoreScheme.punctuation;
+			} else if (pre.isCommonWord(token)) {
+				result += scoreScheme.commonWord;
+			} else if (cth.isWhitespace(token)) {
+				result += scoreScheme.whitespace;
+			} else result += scoreScheme.regularWord;
 
 			// Remove from "larger" token has already been accounted for
 			let x = larger.indexOf(token);
@@ -178,7 +180,7 @@ function calculateIntersectScore(arr1, arr2) {
 			if (equivalentForms) {
 				for (let i = 0; i < equivalentForms.length; i++) {
 					if (larger.includes(equivalentForms[i])) {
-						result += 0.1;
+						result += scoreScheme.equivalentForm;
 						
 						// Remove from "larger" token has already been accounted for
 						let x = larger.indexOf(equivalentForms[i]);
@@ -192,7 +194,7 @@ function calculateIntersectScore(arr1, arr2) {
 				let dotStripedToken = token.split("").filter(char => !cth.isDot(char)).join("");
 				let dotStripedLarger = larger.filter(t => t).map(t => t.split("").filter(char => !cth.isDot(char)).join(""));
 				if (dotStripedLarger.includes(dotStripedToken)) {
-					result += 0.8;
+					result += scoreScheme.abbreviation;
 
 					// Remove from "larger" token has already been accounted for
 					let x = dotStripedLarger.indexOf(dotStripedToken);
@@ -209,13 +211,14 @@ function calculateSentenceScore(arr) {
 	let result = 0;
 	grouping(arr, arr);
 	arr.forEach(token => {
+		let scoreScheme = conf.tokenScore.singleSentence;
 		if (cth.isOther(token) || cth.isApostrophe(token)) {
-			result += 0.4;
+			result += scoreScheme.punctuation;
 		} else if (pre.isCommonWord(token)) {
-			result += 0.2;
+			result += scoreScheme.commonWord;
 		} else if (cth.isWhitespace(token)) {
-			result += 0;
-		} else result += 1;
+			result += scoreScheme.whitespace;
+		} else result += scoreScheme.regularWord;
 	});
 	return result;
 }
