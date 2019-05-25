@@ -243,34 +243,81 @@ wordDiff.equals = function(left, right) {
   }
   return left === right || (this.options.ignoreWhitespace && !reWhitespace.test(left) && !reWhitespace.test(right));
 };
-wordDiff.tokenize = function(value) {
-  let tokens = value.split(/(\s+|[()[\]{}'"]|\b)/);
 
-  // Join the boundary splits that we do not consider to be boundaries. This is primarily the extended Latin character set.
-  for (let i = 0; i < tokens.length - 1; i++) {
-    // If we have an empty string in the next field and we have only word chars before and after, merge
-    if (!tokens[i + 1] && tokens[i + 2]
-          && extendedWordChars.test(tokens[i])
-          && extendedWordChars.test(tokens[i + 2])) {
-      tokens[i] += tokens[i + 2];
-      tokens.splice(i + 1, 2);
-      i--;
-    }
-  }
-
-  return tokens;
+const charTypes = {
+	AlphaNumeric: {
+		value: 1,
+		pattern: /^[\w-]$/
+	},
+	Whitespace: {
+		value: 2,
+		pattern: /^\s$/
+	},
+	Apostrophe: {
+		value: 3,
+		pattern: /^'$/
+	},
+	Dot: {
+		value: 4,
+		pattern: /^\.$/
+	},
+	Other: {
+		value: 5,
+		pattern: /^[^\w-\s']$/
+	},
 };
 
-function diffWords(oldStr, newStr, options) {
-  return wordDiff.diff(oldStr, newStr, options);
+wordDiff.tokenize = function(text) {
+  function getCharTypeValue(char) {
+    for (let x in charTypes) {
+      if (charTypes[x].pattern.test(char)) {
+        return charTypes[x].value;
+      }
+    }
+  }
+  function compareCharTypes (char1, char2) {
+    return getCharTypeValue(char1) - getCharTypeValue(char2);
+  }
+
+  if (!text || text.trim() == "") return [];
+	let tokens = [];		// result
+	let register = []; 		// conveying belt
+	let textLen = text.length;
+	
+	// Loop through every character in the sentence
+	for (let i = 0; i < textLen; i++) {
+		// Put the character on converying belt
+		let newChar = text.charAt(i);
+		register.push(newChar);
+		if (i == 0) continue;
+
+		// If there is a change in character type, extract the token
+		let size = register.length;
+		if (compareCharTypes(register[size - 2], register[size - 1]) != 0) {
+			// Extract the token except the last character which belongs to the next token
+			tokens.push(register.join("").slice(0, -1));
+			register.splice(0, size - 1);
+		}
+	}
+	tokens.push(register.join(""));
+	return tokens;
 }
+
+// export
+function diffWords(oldStr, newStr, options) { return wordDiff.diff(oldStr, newStr, options); }
 
 sentenceDiff = new Diff();
 sentenceDiff.tokenize = function(value) {
   return value.split(/(\S.+?[.!?])(?=\s+|$)/);
 };
 
+// export
 function diffSentences(oldStr, newStr, callback) { return sentenceDiff.diff(oldStr, newStr, callback); }
 
 characterDiff = new Diff();
+
+// export
 function diffChars(oldStr, newStr, options) { return characterDiff.diff(oldStr, newStr, options); }
+
+
+module.exports = { diffChars, diffWords, diffSentences }
