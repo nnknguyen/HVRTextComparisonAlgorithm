@@ -1,5 +1,25 @@
 function Diff() {}
 
+/*
+Please use function diffWords for difference between two sentences.
+
+diffWords takes 2 string as input, return an array of objects of shape
+{size: size of token as Integer,
+ token: token as String,
+ type: type as String}
+
+diffWords(originalSentence, newSentence)
+=> [{size: 3, token: "token as String", type: "redacted"},
+    ...]
+
+Please refer/alter to the value defined constants REMOVED, ADDED, UNCHANGED
+for the value of 'type' in above object
+*/
+
+const REMOVED = 'redacted';
+const ADDED = 'inserted';
+const UNCHANGED = 'unchanged';
+
 Diff.prototype = {
   diff(oldString, newString, options = {}) {
     let callback = options.callback;
@@ -18,6 +38,17 @@ Diff.prototype = {
       } else {
         return value;
       }
+    }
+
+    function formulate(diffArr) {
+      return diffArr.map(c => {
+        if (c.removed)
+          return {size: c.count, token: c.value, type: REMOVED};
+        else if (c.added)
+          return {size: c.count, token: c.value, type: ADDED};
+        else
+          return {size: c.count, token: c.value, type: UNCHANGED};
+      });
     }
 
     // Allow subclasses to massage the input prior to running
@@ -106,7 +137,7 @@ Diff.prototype = {
       while (editLength <= maxEditLength) {
         let ret = execEditLength();
         if (ret) {
-          return ret;
+          return formulate(ret);
         }
       }
     }
@@ -319,5 +350,4 @@ characterDiff = new Diff();
 // export
 function diffChars(oldStr, newStr, options) { return characterDiff.diff(oldStr, newStr, options); }
 
-
-module.exports = { diffChars, diffWords, diffSentences }
+module.exports = { diffWords }
