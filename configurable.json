@@ -16,5 +16,6 @@
             "regularWord": 1
         }
     },
-    "sentenceThreshold": 0.6
+    "sentenceThreshold": 0.6,
+    "paragraphThreshold": 0.9
 }
