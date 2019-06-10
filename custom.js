@@ -236,7 +236,7 @@ function compareSentence(text1, text2) {
 	return {ratio, score: originalTextScore};
 }
 
-const THRESHOLD = 0.6;
+const THRESHOLD = 0.6; // Adjustable
 
 // This function receives a parahraph and returns an array of all sentencces.
 function breakDownToSentences(paragraph) {
