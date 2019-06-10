@@ -1,0 +1,21 @@
+{
+    "ignoreCase": true,
+    "tokenScore": {
+        "intersection": {
+            "whitespace": 0,
+            "punctuation": 0.4,
+            "commonWord": 0.2,
+            "regularWord": 1,
+            "equivalentForm": 0.1,
+            "abbreviation": 0.8
+        },
+        "singleSentence": {
+            "whitespace": 0,
+            "punctuation": 0.4,
+            "commonWord": 0.2,
+            "regularWord": 1
+        }
+    },
+    "sentenceThreshold": 0.6,
+    "paragraphThreshold": 0.9
+}

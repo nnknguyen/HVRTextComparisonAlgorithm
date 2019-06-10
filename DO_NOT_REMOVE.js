@@ -53,3 +53,5 @@
 //     }
 //     return false;
 // });
+
+// return paragraph.match( /\(?[^\.\?\!]+[\.!\?]\)?/g ).map(t => t.trim());
