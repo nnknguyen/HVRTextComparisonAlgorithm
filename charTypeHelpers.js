@@ -1,3 +1,8 @@
+// Project: 					HVR - Quantitative Text Comparison
+// Module: 						charTypeHelpers
+// Author: 						Khang Nguyen, Ruiqi Yu
+// Date of Last Modification:	15 June 2019
+
 // All possible meaningful character types for tokenization
 const charTypes = {
 	AlphaNumeric: {

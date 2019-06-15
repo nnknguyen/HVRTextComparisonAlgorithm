@@ -1,3 +1,8 @@
+// Project: 					HVR - Quantitative Text Comparison
+// Module: 					    custom - Main Module
+// Author: 					    Khang Nguyen, Ruiqi Yu
+// Date of Last Modification:	15 June 2019
+
 const cth = require("./charTypeHelpers");
 const cfh = require("./contractedFormHelpers");
 const pre = require("./predefined");

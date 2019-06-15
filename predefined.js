@@ -1,3 +1,8 @@
+// Project: 					HVR - Quantitative Text Comparison
+// Module: 					    predefined
+// Author: 					    Khang Nguyen, Ruiqi Yu
+// Date of Last Modification:	15 June 2019
+
 const cfh = require("./contractedFormHelpers");
 
 // Array of common words

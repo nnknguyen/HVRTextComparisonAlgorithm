@@ -1,3 +1,8 @@
+// Project: 					HVR - Quantitative Text Comparison
+// Module: 					    contractedFormHelpers
+// Author: 					    Khang Nguyen, Ruiqi Yu
+// Date of Last Modification:	15 June 2019
+
 // Helper function that flats an array on 1 level
 // E.g.: [a, [c, d]] -> [a, b, c]
 Array.prototype.myFlat = function() {
