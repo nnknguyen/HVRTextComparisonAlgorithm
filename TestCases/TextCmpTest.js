@@ -42,14 +42,14 @@ var cases = [
 
 cases.forEach(c => c.ratio = compareParagraph(c.text1, c.text2));
 
-for (let e of cases) {
+for (let c of cases) {
     console.log("==================================================");
     console.log("TEXT 1:");
-    console.log(e.text1);
+    console.log(c.text1);
     console.log("_____________")
     console.log("TEXT 2:");
-    console.log(e.text2);
+    console.log(c.text2);
     console.log("_____________")
     console.log("<-- RATIO -->");
-    console.log(e.ratio);
+    console.log(c.ratio);
 }
