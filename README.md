@@ -1,1 +1,1 @@
-# HVRTextComparisonAlgorithm
+# HVR - Quantitative Text Comparison Algorithm

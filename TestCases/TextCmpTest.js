@@ -1,3 +1,8 @@
+// Project: 					HVR - Quantitative Text Comparison
+// Module: 					    TestCases/TextCmpTest
+// Author: 					    Khang Nguyen, Ruiqi Yu
+// Date of Last Modification:	15 June, 2019
+
 const compareParagraph = require("../custom.js");
 
 var cases = [
@@ -7,7 +12,7 @@ var cases = [
     },
     {
         text2: "I am hungry and I am going to buy some sandwich from Subway.",
-        text1: "I am not hungry because already bought sandwich from Subway."
+        text1: "I am not hungry because I bought sandwich from Subway."
     },
     {
         text1: "While much of the new subscription products will be available exclusively on Apple devices, the company said it would make its new original television streaming service, Apple TV+, available through smart TVs designed by rivals such as Samsung and on digital media players from Roku and Amazon's Fire TV, starting in the fall. The Canadian version of Apple TV will include the ability to purchase subscriptions to Bell Media's streaming service, Crave, which will continue to hold the rights to paid subscription channels such as HBO and Starz. Radio-Canada and CBC's French language video-on-demand service ICI TOU will also be included.",
