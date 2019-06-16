@@ -1,4 +1,5 @@
 const Diff = require('../diff');
+
 let texts = [
     {   
         text1 : "I would not say, I couldn't have done the repair without you.",
@@ -15,6 +16,9 @@ let texts = [
 ];
 
 texts.forEach(t => {
+    console.log("TEXT 1: " + t.text1);
+    console.log("TEXT 2: " + t.text2);
+    console.log("<<< DIFF >>>");
     console.log(Diff.diffWords(t.text1, t.text2));
-    console.log('-'.repeat(50));
+    console.log('='.repeat(50));
 });
