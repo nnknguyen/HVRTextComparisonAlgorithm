@@ -1,3 +1,8 @@
+// Project: 					HVR - Quantitative Text Comparison
+// Module: 					    TestCases/DiffTest
+// Author: 					    Khang Nguyen, Ruiqi Yu
+// Date of Last Modification:	16 June 2019
+
 const Diff = require('../diff');
 
 let texts = [

@@ -1,7 +1,7 @@
 // Project: 					HVR - Quantitative Text Comparison
 // Module: 					    TestCases/TextCmpTest
 // Author: 					    Khang Nguyen, Ruiqi Yu
-// Date of Last Modification:	15 June, 2019
+// Date of Last Modification:	15 June 2019
 
 const compareParagraph = require("../custom.js");
 
